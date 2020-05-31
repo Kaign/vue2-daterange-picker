@@ -665,7 +665,7 @@ export default {
       return this.$dateUtil.format(this.end, this.locale.format)
     },
     rangeText() {
-      if (this.rangeLabel != "Custom range") return this.rangeLabel
+      if (this.dateRange.rangeLabel != "Custom range") return this.dateRange.rangeLabel
       let range = this.startText;
       if (!this.singleDatePicker) {
         range += this.locale.separator + this.endText;
