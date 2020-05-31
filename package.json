@@ -25,7 +25,7 @@
     "prepublishOnly": "npm run lib",
     "unit": "vue-cli-service test:unit",
     "serve": "vue-cli-service serve",
-    "prepare": "npm run build"
+    "prepare": "npm run lib"
   },
   "dependencies": {
     "vue": "^2.6.10"
