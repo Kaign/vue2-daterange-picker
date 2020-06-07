@@ -697,6 +697,9 @@ export default {
     }
   },
   watch: {
+    'dateRange.rangeLabel'(value) {
+      this.rangeLabel = value
+    },
     minDate() {
       let dt = this.$dateUtil.validateDateRange(this.monthDate, this.minDate || new Date(), this.maxDate)
       this.changeLeftMonth({
