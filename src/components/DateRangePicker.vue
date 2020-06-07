@@ -19,6 +19,7 @@
           :startDate="start"
           :endDate="end"
           :ranges="ranges"
+          :rangeLabel="rangeLabel"
     >
       <i class="glyphicon glyphicon-calendar fa fa-calendar"></i>&nbsp;
       <span>{{rangeText}}</span>
