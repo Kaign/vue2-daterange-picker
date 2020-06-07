@@ -2,6 +2,8 @@
 <div
       class="vue-daterange-picker"
       @click.stop
+      @mouseleave="onHoverPicker"
+      @mouseover="onHoverPicker"
 >
   <div
         :class="controlContainerClass"
@@ -30,142 +32,143 @@
         name="slide-fade"
         mode="out-in"
   >
-    <div
-          class="daterangepicker dropdown-menu ltr"
-          :class="pickerStyles"
-          v-if="open"
-    >
+    <div class="dropdown-wrapper">
+      <div
+            class="daterangepicker dropdown-menu ltr"
+            :class="pickerStyles"
+            v-if="open"
+      >
 
-      <!--
+        <!--
           Optional header slot (same props as footer) @see footer slot for documentation
         -->
-      <slot
-            name="header"
-            :rangeText="rangeText"
-            :locale="locale"
-            :clickAway="clickAway"
-            :clickApply="clickedApply"
-            :in_selection="in_selection"
-            :autoApply="autoApply"
-      >
-      </slot>
+        <slot
+              name="header"
+              :rangeText="rangeText"
+              :locale="locale"
+              :clickAway="clickAway"
+              :clickApply="clickedApply"
+              :in_selection="in_selection"
+              :autoApply="autoApply"
+        >
+        </slot>
 
-      <div class="calendars row no-gutters">
-        <!--
+        <div class="calendars row no-gutters">
+          <!--
             Allows you to change the range
 
             @param {Date} startDate - current startDate
             @param {Date} endDate - current endDate
             @param {object} ranges - object with ranges
           -->
-        <slot
-              name="ranges"
-              :startDate="start"
-              :endDate="end"
-              :ranges="ranges"
-              v-if="ranges !== false"
-        >
-          <calendar-ranges
-                class="col-12 col-md-auto"
-                @clickRange="clickRange"
-                @showCustomRange="showCustomWrapper"
-                :always-show-calendars="alwaysShowCalendars"
-                :locale-data="locale"
+          <slot
+                name="ranges"
+                :startDate="start"
+                :endDate="end"
                 :ranges="ranges"
-                :selected="{ startDate: start, endDate: end, rangeLabel: rangeLabel }"
-          ></calendar-ranges>
-        </slot>
-
-        <div
-              class="calendars-container"
-              v-if="showCalendars"
-        >
-          <div
-                class="drp-calendar col left"
-                :class="{single: singleDatePicker}"
+                v-if="ranges !== false"
           >
-            <div
-                  class="daterangepicker_input d-none d-sm-block"
-                  v-if="false"
-            >
-              <input
-                    class="input-mini form-control"
-                    type="text"
-                    name="daterangepicker_start"
-                    :value="startText"
-              />
-              <i class="fa fa-calendar glyphicon glyphicon-calendar"></i>
-            </div>
-            <div class="calendar-table">
-              <calendar
-                    :monthDate="monthDate"
-                    :locale-data="locale"
-                    :start="start"
-                    :end="end"
-                    :minDate="min"
-                    :maxDate="max"
-                    :show-dropdowns="showDropdowns"
-                    @change-month="changeLeftMonth"
-                    :date-format="dateFormatFn"
-                    @dateClick="dateClick"
-                    @hoverDate="hoverDate"
-                    :showWeekNumbers="showWeekNumbers"
-              ></calendar>
-            </div>
-            <calendar-time
-                  v-if="timePicker"
-                  @update="onUpdateStartTime"
-                  :miniute-increment="timePickerIncrement"
-                  :hour24="timePicker24Hour"
-                  :second-picker="timePickerSeconds"
-                  :current-time="start"
-            />
-          </div>
+            <calendar-ranges
+                  class="col-12 col-md-auto"
+                  @clickRange="clickRange"
+                  @showCustomRange="showCustomWrapper"
+                  :always-show-calendars="alwaysShowCalendars"
+                  :locale-data="locale"
+                  :ranges="ranges"
+                  :selected="{ startDate: start, endDate: end, rangeLabel: rangeLabel }"
+            ></calendar-ranges>
+          </slot>
 
           <div
-                class="drp-calendar col right"
-                v-if="!singleDatePicker"
+                class="calendars-container"
+                v-if="showCalendars"
           >
             <div
-                  class="daterangepicker_input"
-                  v-if="false"
+                  class="drp-calendar col left"
+                  :class="{single: singleDatePicker}"
             >
-              <input
-                    class="input-mini form-control"
-                    type="text"
-                    name="daterangepicker_end"
-                    :value="endText"
+              <div
+                    class="daterangepicker_input d-none d-sm-block"
+                    v-if="false"
+              >
+                <input
+                      class="input-mini form-control"
+                      type="text"
+                      name="daterangepicker_start"
+                      :value="startText"
+                />
+                <i class="fa fa-calendar glyphicon glyphicon-calendar"></i>
+              </div>
+              <div class="calendar-table">
+                <calendar
+                      :monthDate="monthDate"
+                      :locale-data="locale"
+                      :start="start"
+                      :end="end"
+                      :minDate="min"
+                      :maxDate="max"
+                      :show-dropdowns="showDropdowns"
+                      @change-month="changeLeftMonth"
+                      :date-format="dateFormatFn"
+                      @dateClick="dateClick"
+                      @hoverDate="hoverDate"
+                      :showWeekNumbers="showWeekNumbers"
+                ></calendar>
+              </div>
+              <calendar-time
+                    v-if="timePicker"
+                    @update="onUpdateStartTime"
+                    :miniute-increment="timePickerIncrement"
+                    :hour24="timePicker24Hour"
+                    :second-picker="timePickerSeconds"
+                    :current-time="start"
               />
-              <i class="fa fa-calendar glyphicon glyphicon-calendar"></i>
             </div>
-            <div class="calendar-table">
-              <calendar
-                    :monthDate="nextMonthDate"
-                    :locale-data="locale"
-                    :start="start"
-                    :end="end"
-                    :minDate="min"
-                    :maxDate="max"
-                    :show-dropdowns="showDropdowns"
-                    @change-month="changeRightMonth"
-                    :date-format="dateFormatFn"
-                    @dateClick="dateClick"
-                    @hoverDate="hoverDate"
-                    :showWeekNumbers="showWeekNumbers"
-              ></calendar>
+
+            <div
+                  class="drp-calendar col right"
+                  v-if="!singleDatePicker"
+            >
+              <div
+                    class="daterangepicker_input"
+                    v-if="false"
+              >
+                <input
+                      class="input-mini form-control"
+                      type="text"
+                      name="daterangepicker_end"
+                      :value="endText"
+                />
+                <i class="fa fa-calendar glyphicon glyphicon-calendar"></i>
+              </div>
+              <div class="calendar-table">
+                <calendar
+                      :monthDate="nextMonthDate"
+                      :locale-data="locale"
+                      :start="start"
+                      :end="end"
+                      :minDate="min"
+                      :maxDate="max"
+                      :show-dropdowns="showDropdowns"
+                      @change-month="changeRightMonth"
+                      :date-format="dateFormatFn"
+                      @dateClick="dateClick"
+                      @hoverDate="hoverDate"
+                      :showWeekNumbers="showWeekNumbers"
+                ></calendar>
+              </div>
+              <calendar-time
+                    v-if="timePicker"
+                    @update="onUpdateEndTime"
+                    :miniute-increment="timePickerIncrement"
+                    :hour24="timePicker24Hour"
+                    :second-picker="timePickerSeconds"
+                    :current-time="end"
+              />
             </div>
-            <calendar-time
-                  v-if="timePicker"
-                  @update="onUpdateEndTime"
-                  :miniute-increment="timePickerIncrement"
-                  :hour24="timePicker24Hour"
-                  :second-picker="timePickerSeconds"
-                  :current-time="end"
-            />
           </div>
         </div>
-      </div>
-      <!--
+        <!--
           Allows you to change footer of the component (where the buttons are)
 
           @param {string} rangeText - the formatted date range by the component
@@ -175,38 +178,39 @@
           @param {boolean} in_selection - is the picker in selection mode
           @param {boolean} autoApply - value of the autoApply prop (whether to select immediately)
         -->
-      <slot
-            name="footer"
-            :rangeText="rangeText"
-            :locale="locale"
-            :clickAway="clickAway"
-            :clickApply="clickedApply"
-            :in_selection="in_selection"
-            :autoApply="autoApply"
-      >
-        <div
-              class="drp-buttons"
-              v-if="!autoApply"
+        <slot
+              name="footer"
+              :rangeText="rangeText"
+              :locale="locale"
+              :clickAway="clickAway"
+              :clickApply="clickedApply"
+              :in_selection="in_selection"
+              :autoApply="autoApply"
         >
-          <span
-                class="drp-selected"
-                v-if="showCalendars"
-          >{{rangeText}}</span>
-          <button
-                class="cancelBtn btn btn-sm btn-default"
-                type="button"
-                @click="clickAway"
-          >{{locale.cancelLabel}}
-          </button>
-          <button
-                class="applyBtn btn btn-sm btn-success"
-                :disabled="in_selection"
-                type="button"
-                @click="clickedApply"
-          >{{locale.applyLabel}}
-          </button>
-        </div>
-      </slot>
+          <div
+                class="drp-buttons"
+                v-if="!autoApply"
+          >
+            <span
+                  class="drp-selected"
+                  v-if="showCalendars"
+            >{{rangeText}}</span>
+            <button
+                  class="cancelBtn btn btn-sm btn-default"
+                  type="button"
+                  @click="clickAway"
+            >{{locale.cancelLabel}}
+            </button>
+            <button
+                  class="applyBtn btn btn-sm btn-success"
+                  :disabled="in_selection"
+                  type="button"
+                  @click="clickedApply"
+            >{{locale.applyLabel}}
+            </button>
+          </div>
+        </slot>
+      </div>
     </div>
   </transition>
 </div>
@@ -234,6 +238,13 @@ export default {
     event: 'update',
   },
   props: {
+    /**
+     * open and close picker on mouseover and mouseleave
+     */
+    toggleOnHover: {
+      type: Boolean,
+      default: false,
+    },
     /**
      * minimum date allowed to be selected
      * @default null
@@ -550,6 +561,11 @@ export default {
        * @param {Date} value the date that is being hovered
        */
       this.$emit('hoverDate', value)
+    },
+    onHoverPicker() {
+      if (this.toggleOnHover) {
+        this.onClickPicker()
+      }
     },
     onClickPicker() {
       if (!this.disabled) {
